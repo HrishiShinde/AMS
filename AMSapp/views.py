@@ -119,16 +119,19 @@ def clockOut(request):
     if request.method == "POST":
         clkIn = request.session['clkInToday']
         listl = ((clkIn.replace(":"," ")).replace("-" , " ")).split()
-        year = int(listl[0])
-        month = int(listl[1])
-        day = int(listl[2])
-        hour = int(listl[3])
-        minu = int(listl[4])
-        sec = int(listl[5])
-        inTime = datetime.datetime(year,month,day,hour,minu,sec)
+        list2 = ((str(datetime.date.today()).replace("-" , " "))).split()
+        year = int(list2[0])
+        month = int(list2[1])
+        day = int(list2[2])
+        hour = int(listl[0])
+        minu = int(listl[1])
+        sec = int(listl[2])
 
         IST = pytz.timezone('Asia/Kolkata')
 
+        inTime = datetime.datetime(year,month,day,hour,minu,sec)
+
+        timeNowUTC = datetime.datetime.now()
         timeNow = datetime.datetime.now(IST)
         # date = timeNow.strftime("%Y-%m-%d")
         clkOut = timeNow.strftime("%H:%M:%S")
@@ -136,10 +139,10 @@ def clockOut(request):
         out = timeNow.strftime("%H:%M")
         strOut = int(str(out)[0:2])
 
-        if 23 > strOut > 18:
+        if 23 >= strOut > 18:
             overtime = True
 
-        minususu = str(timeNow - inTime)[0:5]
+        minususu = str(timeNowUTC - inTime)[0:5]
         if minususu[-1] == ":":
             minususu = minususu[:-1]
         # print(minususu)
