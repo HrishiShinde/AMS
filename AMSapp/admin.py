@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Timings)
 class TimingsAdmin(admin.ModelAdmin):
-    list_display = ["timeId", "userId", "date"
+    list_display = ["timeId", "usrId", "date"
 , "userClkIn"
 , "userClkOut"
 , "userBrkIn"
