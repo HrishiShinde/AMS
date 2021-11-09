@@ -19,4 +19,6 @@ urlpatterns = [
     path('request/', views.renderRequest),
     path('status/', views.status),
     path('export/', views.export),
+    path('add/', views.add),
+    path('delete/', views.delete),
 ]

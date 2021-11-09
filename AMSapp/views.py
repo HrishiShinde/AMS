@@ -216,3 +216,22 @@ def export(request):
 
     response['Content-Disposition'] = 'attachment; filename="attendence.csv"'
     return response
+
+def add(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        pwd = request.POST.get("pass")
+
+        db = User.objects.create(userName = name, userPass = pwd)
+        db.save()
+
+        return redirect('/users')
+
+def delete(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+
+        db = User.objects.get(userId = id)
+        db.delete()
+
+        return redirect('/users')

@@ -135,15 +135,54 @@
             </thead>
             <tbody>
                 {% for i in data %}
+                <form action="/delete/" method="POST">
+                {% csrf_token %}
                 <tr scope="row">
-                    <th>{{i.userId}}</th>
+                    <th>{{i.userId}} <input type="hidden" name="id" class="form-control" id="userId" value="{{i.userId}}"> </th>
                     <td>{{i.userName}}</td>
                     <td>{{i.userPass}}</td>
-                    <td><a class="btn btn-danger" href="#" role="button">Delete</a></td>
+                    <td><button type="submit" class="btn btn-danger">Delete</button></td>
                 </tr>
+                </form>
                 {% endfor %}
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"></td>
+                    <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#userForm">Add new User</button></td>
+                </tr>
+            </tfoot>
         </table>
+
+        <div class="modal fade" id="userForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">New User</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="/add/">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="userName" class="form-label">Username:</label>
+                                <input class="form-control" type="text" id="userName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="pass" class="form-label">Password:</label>
+                                <input class="form-control" type="password" name="pass" id="pass" rows="3" required>
+                            </div>
+                            {% comment %} <button type="submit" class="btn btn-primary">Apply</button> {% endcomment %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
     
     

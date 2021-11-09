@@ -102,20 +102,20 @@
                             <div class="mb-3">
                                 <label for="userId" class="form-label">Type:</label>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="type" id="inlineRadio1" value="Leave">
+                                    <input class="form-check-input" type="radio" name="type" id="inlineRadio1" value="Leave" required>
                                     <label class="form-check-label" for="inlineRadio1">Leave</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="type" id="inlineRadio2" value="Half Day">
+                                    <input class="form-check-input" type="radio" name="type" id="inlineRadio2" value="Half Day" required>
                                     <label class="form-check-label" for="inlineRadio2">Half Day</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label for="date" class="form-label">Date:</label>
-                                <input class="form-control" type="date" id="date" name="date">
+                                <input class="form-control" type="date" id="date" name="date" required>
                             </div>
                             <div class="mb-3">
-                                <label for="Reason" class="form-label">Reason:</label>
+                                <label for="Reason" class="form-label" required>Reason:</label>
                                 <textarea class="form-control" name="reason" id="Reason" rows="3"></textarea>
                             </div>
                             {% comment %} <button type="submit" class="btn btn-primary">Apply</button> {% endcomment %}
