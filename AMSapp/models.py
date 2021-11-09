@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 class User(models.Model):
 
-    userId = models.AutoField(primary_key=True)
+    userId = models.AutoField(primary_key = True)
     userName = models.CharField(max_length=50)
     userPass = models.CharField(max_length=20)
 
@@ -13,7 +13,7 @@ class User(models.Model):
 
 class Timings(models.Model):
 
-    timeId = models.AutoField(primary_key=True)
+    timeId = models.AutoField(primary_key = True)
     usrId = models.IntegerField()
     date = models.CharField(max_length=50, default = "-")
     userClkIn= models.CharField(max_length=50, default="-")
