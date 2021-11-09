@@ -118,6 +118,9 @@ def clockIn(request):
 def clockOut(request):
     if request.method == "POST":
         clkIn = request.session['clkInToday']
+
+        IST = pytz.timezone('Asia/Kolkata')
+
         listl = ((clkIn.replace(":"," ")).replace("-" , " ")).split()
         list2 = ((str(datetime.date.today()).replace("-" , " "))).split()
         year = int(list2[0])
@@ -127,14 +130,21 @@ def clockOut(request):
         minu = int(listl[1])
         sec = int(listl[2])
 
-        IST = pytz.timezone('Asia/Kolkata')
 
         inTime = datetime.datetime(year,month,day,hour,minu,sec)
 
         timeNowUTC = datetime.datetime.now()
         timeNow = datetime.datetime.now(IST)
         # date = timeNow.strftime("%Y-%m-%d")
+        inTimeRefined = inTime.strftime("%Y-%m-%d %H:%M:%S")
+        L1 = ((inTimeRefined.replace(":"," ")).replace("-" , " ")).split()
+        inTimeRefined = datetime.datetime(int(L1[0]),int(L1[1]),int(L1[2]),int(L1[3]),int(L1[4]),int(L1[5]))
+        timeNowRefined = timeNow.strftime("%Y-%m-%d %H:%M:%S")
+        L2 = ((timeNowRefined.replace(":"," ")).replace("-" , " ")).split()
+        timeNowRefined = datetime.datetime(int(L2[0]),int(L2[1]),int(L2[2]),int(L2[3]),int(L2[4]),int(L2[5]))
         clkOut = timeNow.strftime("%H:%M:%S")
+
+        print(inTimeRefined, timeNowRefined, type(inTimeRefined), type(timeNowRefined))
 
         out = timeNow.strftime("%H:%M")
         strOut = int(str(out)[0:2])
@@ -142,7 +152,7 @@ def clockOut(request):
         if 23 >= strOut > 18:
             overtime = True
 
-        minususu = str(timeNowUTC - inTime)[0:5]
+        minususu = str(timeNowRefined - inTimeRefined)[0:5]
         if minususu[-1] == ":":
             minususu = minususu[:-1]
         # print(minususu)
