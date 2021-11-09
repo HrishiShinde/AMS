@@ -28,10 +28,12 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 SECRET_KEY = 'django-insecure-tl-@w)j-ncg(vou8!e5h!q#if-r0k5l&um+iyucq%z-z3bb29('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'https://a-m-s.herokuapp.com',
+    'localhost',
+    'http://127.0.0.1/'
 ]
 
 
