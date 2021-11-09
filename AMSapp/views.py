@@ -103,7 +103,7 @@ def clockIn(request):
             status = "Half Day"
         # print("========", clkIn, type(clkIn), "======")
         # print("========", timeNow, type(timeNow), status, "======")
-        db = Timings.objects.create(userId = uId, date = date, userClkIn = clkIn, status = status)
+        db = Timings.objects.create(usrId = uId, date = date, userClkIn = clkIn, status = status)
         db.save()
         request.session['clkInToday'] = clkIn
         data = {
@@ -190,10 +190,10 @@ def status(request):
             status = "Approved"
             true = True
             if types == "Leave":
-                db = Timings.objects.create(userId = usrId, date = date, hasLeaveAppointed = true, status = "Leave")
+                db = Timings.objects.create(usrId = usrId, date = date, hasLeaveAppointed = true, status = "Leave")
                 db.save()
             elif types == "Half day":
-                db = Timings.objects.create(userId = usrId, date = date, hasHalfDayAppointed = true, status = "Half Day")
+                db = Timings.objects.create(usrId = usrId, date = date, hasHalfDayAppointed = true, status = "Half Day")
                 db.save()
         else:
             status = "Denied"
@@ -211,7 +211,7 @@ def export(request):
     writer = csv.writer(response)
     writer.writerow(['timeId', 'userId', 'userClkIn', 'userClkOut', 'userBrkIn', 'userBrkOut', 'status', 'hasHalfDayAppointed', 'hasLeaveAppointed', 'overtime', 'numOfHours'])
 
-    for t in Timings.objects.values_list('timeId', 'userId', 'userClkIn', 'userClkOut', 'userBrkIn', 'userBrkOut', 'status', 'hasHalfDayAppointed', 'hasLeaveAppointed', 'overtime', 'numOfHours'):
+    for t in Timings.objects.values_list('timeId', 'usrId', 'userClkIn', 'userClkOut', 'userBrkIn', 'userBrkOut', 'status', 'hasHalfDayAppointed', 'hasLeaveAppointed', 'overtime', 'numOfHours'):
         writer.writerow(t)
 
     response['Content-Disposition'] = 'attachment; filename="attendence.csv"'

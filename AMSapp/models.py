@@ -13,8 +13,8 @@ class User(models.Model):
 
 class Timings(models.Model):
 
-    timeId = models.AutoField(primary_key=True, default="-")
-    userId = models.IntegerField()
+    timeId = models.AutoField(primary_key=True)
+    usrId = models.IntegerField()
     date = models.CharField(max_length=50, default = "-")
     userClkIn= models.CharField(max_length=50, default="-")
     userClkOut = models.CharField(max_length=50, default="-")
