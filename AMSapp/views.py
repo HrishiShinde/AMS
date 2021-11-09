@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import Request, Timings, User
 
-import datetime,csv
+import datetime,csv, pytz
 from time import daylight, strftime
 
 # Create your views here.
@@ -91,7 +91,8 @@ def doLogout(request):
 def clockIn(request):
     if request.method == "POST":
         uId = request.session['userId']
-        timeNow = datetime.datetime.now()
+        IST = pytz.timezone('Asia/Kolkata')
+        timeNow = datetime.datetime.now(IST)
         date = timeNow.strftime("%Y-%m-%d")
         clkIn = timeNow.strftime("%H:%M:%S")
         timeNow = int((timeNow.strftime("%H:%M")).replace(":",""))
@@ -126,10 +127,12 @@ def clockOut(request):
         sec = int(listl[5])
         inTime = datetime.datetime(year,month,day,hour,minu,sec)
 
-        timeNow = datetime.datetime.now()
-        clkOut = timeNow.strftime("%Y-%m-%d %H:%M:%S")
+        IST = pytz.timezone('Asia/Kolkata')
 
-        # inTime = inTime.strftime("%H:%M")
+        timeNow = datetime.datetime.now(IST)
+        # date = timeNow.strftime("%Y-%m-%d")
+        clkOut = timeNow.strftime("%H:%M:%S")
+
         out = timeNow.strftime("%H:%M")
         strOut = int(str(out)[0:2])
 
@@ -155,8 +158,9 @@ def clockOut(request):
 def brkIn(request):
     if request.method == "POST":
         clkIn = request.session['clkInToday']
-        timeNow = datetime.datetime.now()
-        brkIn = timeNow.strftime("%Y-%m-%d %H:%M:%S")
+        IST = pytz.timezone('Asia/Kolkata')
+        timeNow = datetime.datetime.now(IST)
+        brkIn = timeNow.strftime("%H:%M:%S")
         db = Timings.objects.get(userClkIn = clkIn)
         db.userBrkIn = brkIn
         db.save()
@@ -169,8 +173,9 @@ def brkIn(request):
 def brkOut(request):
     if request.method == "POST":
         clkIn = request.session['clkInToday']
-        timeNow = datetime.datetime.now()
-        brkOut = timeNow.strftime("%Y-%m-%d %H:%M:%S")
+        IST = pytz.timezone('Asia/Kolkata')
+        timeNow = datetime.datetime.now(IST)
+        brkOut = timeNow.strftime("%H:%M:%S")
         db = Timings.objects.get(userClkIn = clkIn)
         db.userBrkOut = brkOut
         db.save()
