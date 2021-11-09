@@ -49,13 +49,15 @@ def doLogin(request):
             # print(userDb)
             return render(request, "adminUsers.html", {"success" : "Welcome " + userID, "data" : userDb})
 
-        for u in User.objects.raw('select * from User where userId="%s"' % (userID)):
-            if u.userPass == userPass:
-                request.session['user'] = u.userName
-                request.session['userId'] = userID
-                return render(request, "index.html", {"success" : "Welcome " + u.userName})
-            return render(request, "login.html", {"fail" : "Password Incorrect"})
-        return render(request, "login.html", {"fail" : "User-Id Incorrect"})
+        try:
+            db = User.objects.get(userId = userID)
+        except:
+            return render(request, "login.html", {"fail" : "User-Id Incorrect"})
+        if db.userPass == userPass:
+            request.session['user'] = db.userName
+            request.session['userId'] = userID
+            return render(request, "index.html", {"success" : "Welcome " + db.userName})
+        return render(request, "login.html", {"fail" : "Password Incorrect"})
 
 def doRequest(request):
     if request.method == "POST":
