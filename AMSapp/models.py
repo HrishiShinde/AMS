@@ -11,7 +11,7 @@ class User(models.Model):
     class Meta:
         db_table = "User"
 
-class Timing(models.Model):
+class Timings(models.Model):
 
     timeId = models.AutoField(primary_key=True)
     usrId = models.IntegerField()

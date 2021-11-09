@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Request, Timing, User
+from .models import Request, Timings, User
 
 import datetime,csv
 from time import daylight, strftime
@@ -24,7 +24,7 @@ def renderUsers(request):
     return render(request, "adminUsers.html", {"data" : userDb})
 
 def renderTimings(request):
-    timeDb = Timing.objects.values()
+    timeDb = Timings.objects.values()
     return render(request, "adminTime.html", {"data" : timeDb})
 
 def renderRequest(request):
@@ -103,7 +103,7 @@ def clockIn(request):
             status = "Half Day"
         # print("========", clkIn, type(clkIn), "======")
         # print("========", timeNow, type(timeNow), status, "======")
-        db = Timing.objects.create(usrId = uId, date = date, userClkIn = clkIn, status = status)
+        db = Timings.objects.create(usrId = uId, date = date, userClkIn = clkIn, status = status)
         db.save()
         request.session['clkInToday'] = clkIn
         data = {
@@ -139,7 +139,7 @@ def clockOut(request):
             minususu = minususu[:-1]
         # print(minususu)
         # print("========", clkOut, type(clkOut), "======")    2021-11-05 20:45:47
-        db = Timing.objects.get(userClkIn = clkIn)
+        db = Timings.objects.get(userClkIn = clkIn)
         db.userClkOut = clkOut
         db.overtime = overtime
         db.numOfHours = minususu
@@ -155,7 +155,7 @@ def brkIn(request):
         clkIn = request.session['clkInToday']
         timeNow = datetime.datetime.now()
         brkIn = timeNow.strftime("%Y-%m-%d %H:%M:%S")
-        db = Timing.objects.get(userClkIn = clkIn)
+        db = Timings.objects.get(userClkIn = clkIn)
         db.userBrkIn = brkIn
         db.save()
         data = {
@@ -169,7 +169,7 @@ def brkOut(request):
         clkIn = request.session['clkInToday']
         timeNow = datetime.datetime.now()
         brkOut = timeNow.strftime("%Y-%m-%d %H:%M:%S")
-        db = Timing.objects.get(userClkIn = clkIn)
+        db = Timings.objects.get(userClkIn = clkIn)
         db.userBrkOut = brkOut
         db.save()
         data = {
@@ -190,10 +190,10 @@ def status(request):
             status = "Approved"
             true = True
             if types == "Leave":
-                db = Timing.objects.create(usrId = usrId, date = date, hasLeaveAppointed = true, status = "Leave")
+                db = Timings.objects.create(usrId = usrId, date = date, hasLeaveAppointed = true, status = "Leave")
                 db.save()
             elif types == "Half day":
-                db = Timing.objects.create(usrId = usrId, date = date, hasHalfDayAppointed = true, status = "Half Day")
+                db = Timings.objects.create(usrId = usrId, date = date, hasHalfDayAppointed = true, status = "Half Day")
                 db.save()
         else:
             status = "Denied"
@@ -211,7 +211,7 @@ def export(request):
     writer = csv.writer(response)
     writer.writerow(['timeId', 'userId', 'userClkIn', 'userClkOut', 'userBrkIn', 'userBrkOut', 'status', 'hasHalfDayAppointed', 'hasLeaveAppointed', 'overtime', 'numOfHours'])
 
-    for t in Timing.objects.values_list('timeId', 'usrId', 'userClkIn', 'userClkOut', 'userBrkIn', 'userBrkOut', 'status', 'hasHalfDayAppointed', 'hasLeaveAppointed', 'overtime', 'numOfHours'):
+    for t in Timings.objects.values_list('timeId', 'usrId', 'userClkIn', 'userClkOut', 'userBrkIn', 'userBrkOut', 'status', 'hasHalfDayAppointed', 'hasLeaveAppointed', 'overtime', 'numOfHours'):
         writer.writerow(t)
 
     response['Content-Disposition'] = 'attachment; filename="attendence.csv"'
