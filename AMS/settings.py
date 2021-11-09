@@ -27,11 +27,10 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-tl-@w)j-ncg(vou8!e5h!q#if-r0k5l&um+iyucq%z-z3bb29('
 
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-os.environ.get("DEBUG")
-# DEBUG_PROPAGATE_EXCEPTIONS = True
+DEBUG = os.environ.get("DEBUG")
 
 ALLOWED_HOSTS = [
     'ams-dep.herokuapp.com',
