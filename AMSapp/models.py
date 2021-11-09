@@ -11,9 +11,9 @@ class User(models.Model):
     class Meta:
         db_table = "User"
 
-class Timings(models.Model):
+class Timing(models.Model):
 
-    timeId = models.AutoField()
+    timeId = models.AutoField(primary_key=True)
     usrId = models.IntegerField()
     date = models.CharField(max_length=50, default = "-")
     userClkIn= models.CharField(max_length=50, default="-")
@@ -27,7 +27,8 @@ class Timings(models.Model):
     numOfHours = models.CharField(max_length=50, default=0)
 
     class Meta:
-        db_table = "Timings"
+        db_table = "Timing"
+
 
 class Request(models.Model):
     

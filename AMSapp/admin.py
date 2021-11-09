@@ -1,14 +1,14 @@
 from django.contrib import admin
-from .models import Request, Timings, User
+from .models import Request, Timing, User
 
 # Register your models here.
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ['userId', 'userName', 'userPass']
 
-@admin.register(Timings)
+@admin.register(Timing)
 class TimingsAdmin(admin.ModelAdmin):
-    list_display = ["timeId", "usrId", "date"
+    list_display = [ "usrId", "date"
 , "userClkIn"
 , "userClkOut"
 , "userBrkIn"
