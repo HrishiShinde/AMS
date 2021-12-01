@@ -4,7 +4,7 @@ from AMSapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('renderlogin/', views.renderLogin),
+    path('', views.renderLogin),
     path('home/', views.renderHome),
     path('leave/', views.renderLeave),
     path('users/', views.renderUsers),
@@ -21,4 +21,5 @@ urlpatterns = [
     path('export/', views.export),
     path('add/', views.add),
     path('delete/', views.delete),
+    path('checkpc/', views.checkMissedClocksPC),
 ]

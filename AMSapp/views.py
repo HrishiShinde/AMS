@@ -1,3 +1,4 @@
+import time
 from django.shortcuts import redirect, render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -38,6 +39,22 @@ def renderRequest(request):
         print()
     return render(request, "adminRequest.html", context)
 
+def checkMissedClocksPC(request):
+    # time.sleep(30)
+    date = datetime.date.today()
+    userId = request.session['userId']
+    try:
+        db = Timings.objects.get(date = date, usrId = userId)
+        data = {
+            "success" : "Success"
+        }
+        return JsonResponse(data)
+    except:
+        data = {
+            "fail" : "You haven't Clocked In Yet!"
+        }
+        return JsonResponse(data)
+
 def doLogin(request):
     if request.method == "POST":
         userID = request.POST.get("userid")
@@ -56,6 +73,13 @@ def doLogin(request):
         if db.userPass == userPass:
             request.session['user'] = db.userName
             request.session['userId'] = userID
+
+            date = datetime.date.today()
+            db = User.objects.get(userId = userID)
+            db.date = date
+            db.hasLoggedIn = True
+            db.save()
+
             return render(request, "index.html", {"success" : "Welcome " + db.userName})
         return render(request, "login.html", {"fail" : "Password Incorrect"})
 
@@ -73,18 +97,27 @@ def doRequest(request):
 
 def doLogout(request):
     try:
+        db = User.objects.get(userId = request.session['userId'])
+        db.date = "-"
+        db.hasLoggedIn = False
+        db.hasClockedIn = False
+        db.save()
         del request.session['user']
         try:
             del request.session['userId']
             try:
                 del request.session['clkInToday']
+                del request.session['clkedInToday']
+                del request.session['clkedOutToday']
+                del request.session['brkInToday']
+                del request.session['brkOutToday']
             except:
                 print("clkInToday Not present")
         except:
             print("userId Not present")
     except:
         print("User Not present")
-    finally:    
+    finally:
         return render(request, "login.html", {"success" : "Logout successsful"})
 
 @csrf_exempt
@@ -93,6 +126,7 @@ def clockIn(request):
         uId = request.session['userId']
         IST = pytz.timezone('Asia/Kolkata')
         timeNow = datetime.datetime.now(IST)
+        dateToday = datetime.date.today()
         date = timeNow.strftime("%Y-%m-%d")
         clkIn = timeNow.strftime("%H:%M:%S")
         timeNow = int((timeNow.strftime("%H:%M")).replace(":",""))
@@ -108,7 +142,11 @@ def clockIn(request):
         # print("========", timeNow, type(timeNow), status, "======")
         db = Timings.objects.create(usrId = uId, date = date, userClkIn = clkIn, status = status)
         db.save()
+        db = User.objects.get(userId = uId, date = dateToday)
+        db.hasClockedIn = True
+        db.save()
         request.session['clkInToday'] = clkIn
+        request.session['clkedInToday'] = "True"
         data = {
             "success" : "Clocked In!"
         }
@@ -149,6 +187,8 @@ def clockOut(request):
         out = timeNow.strftime("%H:%M")
         strOut = int(str(out)[0:2])
 
+        overtime = False
+
         if 23 >= strOut > 18:
             overtime = True
 
@@ -165,6 +205,8 @@ def clockOut(request):
         data = {
             "success" : "Clocked Out!"
         }
+
+        request.session['clkedOutToday'] = "True"
         return JsonResponse(data)
 
 @csrf_exempt
@@ -180,6 +222,7 @@ def brkIn(request):
         data = {
             "success" : "Break In Recorded!"
         }
+        request.session['brkInToday'] = "True"
         return JsonResponse(data)
 
 @csrf_exempt
@@ -195,6 +238,7 @@ def brkOut(request):
         data = {
             "success" : "Break Out Recorded!"
         }
+        request.session['brkOutToday'] = "True"
         return JsonResponse(data)
 
 @csrf_exempt

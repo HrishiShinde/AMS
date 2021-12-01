@@ -1,3 +1,4 @@
+from datetime import date
 from django import db
 from django.db import models
 
@@ -7,6 +8,9 @@ class User(models.Model):
     userId = models.AutoField(primary_key = True)
     userName = models.CharField(max_length=50)
     userPass = models.CharField(max_length=20)
+    date = models.CharField(max_length=50, default = "-")
+    hasLoggedIn = models.BooleanField(default=False)
+    hasClockedIn = models.BooleanField(default=False)
 
     class Meta:
         db_table = "User"
@@ -21,6 +25,7 @@ class Timings(models.Model):
     userBrkIn = models.CharField(max_length=50, default="-")
     userBrkOut = models.CharField(max_length=50, default="-")
     status = models.CharField(max_length=50, default="-") # Present, Absent, Late, Halfday, Early.
+    # hasLoggedIn = models.BooleanField(default=False)
     hasHalfDayAppointed = models.BooleanField(default=False)
     hasLeaveAppointed = models.BooleanField(default=False)
     overtime  = models.BooleanField(default=False)

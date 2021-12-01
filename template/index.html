@@ -11,61 +11,86 @@
 
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script>
-            $(document).ready(function(){  
-                $("#clkInButt").click(function(){
-                    clkIn()
-                });
-                $("#clkOutButt").click(function(){
-                    clkOut()
-                });
-                $("#brkInButt").click(function(){
-                    brkIn()
-                });
-                $("#brkOutButt").click(function(){
-                    brkOut()
-                });
+        window.onload = function(){
+            setInterval(check, 300000);
+            // setInterval(prit, 1000);
+        };
+
+        // let counter = 0;
+        // function prit(){
+        //     counter++;
+        //     console.log("IT's RUNNINGGGGGGGGGGG!!!!!!!!!!", counter);
+        // }
+
+        function check(){
+            $.ajax({
+                url:'/checkpc/',
+                method: 'GET',
+                async: true,
+                cache: false,
+                success:function(data){
+                    alert(data.fail);
+                    // document.getElementById("brkOutButt").disabled = true;
+                }
             });
-            function clkIn(){
-                $.ajax({
-                    url:'/clkin/',
-                    method: 'POST',
-                    async: true,
-                    cache: false,
-                    success:function(data){
-                        alert(data.success);
-                        document.getElementById("clkInButt").disabled = true;
-                        document.getElementById("brkInButt").disabled = false;
-                    }
-                });
-            }
-            function clkOut(){
-                $.ajax({
-                    url:'/clkout/',
-                    method: 'POST',
-                    async: true,
-                    cache: false,
-                    success:function(data){
-                        alert(data.success);
-                        document.getElementById("clkOutButt").disabled = true;
-                        document.getElementById("brkInButt").disabled = true;
-                        document.getElementById("brkOutButt").disabled = true;
-                    }
-                });
-            }
-            function brkIn(){
-                $.ajax({
-                    url:'/brkin/',
-                    method: 'POST',
-                    async: true,
-                    cache: false,
-                    success:function(data){
-                        alert(data.success);
-                        document.getElementById("brkInButt").disabled = true;
-                        document.getElementById("brkOutButt").disabled = false;
-                    }
-                });
-            }
-            function brkOut(){
+        }
+
+        $(document).ready(function(){  
+            $("#clkInButt").click(function(){
+                clkIn()
+            });
+            $("#clkOutButt").click(function(){
+                clkOut()
+            });
+            $("#brkInButt").click(function(){
+                brkIn()
+            });
+            $("#brkOutButt").click(function(){
+                brkOut()
+            });
+        });
+        function clkIn(){
+            $.ajax({
+                url:'/clkin/',
+                method: 'POST',
+                async: true,
+                cache: false,
+                success:function(data){
+                    alert(data.success);
+                    document.getElementById("clkInButt").disabled = true;
+                    document.getElementById("clkOutButt").disabled = false;
+                    document.getElementById("brkInButt").disabled = false;
+                }
+            });
+        }
+        function clkOut(){
+            $.ajax({
+                url:'/clkout/',
+                method: 'POST',
+                async: true,
+                cache: false,
+                success:function(data){
+                    alert(data.success);
+                    document.getElementById("clkOutButt").disabled = true;
+                    document.getElementById("brkInButt").disabled = true;
+                    document.getElementById("brkOutButt").disabled = true;
+                }
+            });
+        }
+        function brkIn(){
+            $.ajax({
+                url:'/brkin/',
+                method: 'POST',
+                async: true,
+                cache: false,
+                success:function(data){
+                    alert(data.success);
+                    document.getElementById("brkInButt").disabled = true;
+                    document.getElementById("brkOutButt").disabled = false;
+                }
+            });
+        }
+        function brkOut(){
                 $.ajax({
                     url:'/brkout/',
                     method: 'POST',
@@ -124,12 +149,30 @@
         <div class="row my-5 ms-4">
             <div class="d-grid gap-2 col-2"></div>
             <div class="d-grid gap-2 col-4">
+                {% if request.session.clkedInToday == "True" %}
+                <button id="clkInButt" class="btn btn-primary p-3" disabled>Clock in!</button>
+                {% else %}
                 <button id="clkInButt" class="btn btn-primary p-3">Clock in!</button>
+                {% endif %}
+
+                {% if request.session.clkedOutToday == "True" or request.session.clkedInToday != "True" %}
+                <button id="clkOutButt" class="btn btn-danger p-3" disabled>Clock out!</button>
+                {% else %}
                 <button id="clkOutButt" class="btn btn-danger p-3">Clock out!</button>
+                {% endif %}
             </div>
             <div class="d-grid gap-2 col-4">
+                {% if request.session.brkInToday == "True" or request.session.clkedInToday != "True" %}
                 <button id="brkInButt" class="btn btn-warning p-3" disabled>Register Break In</button>
+                {% else %}
+                <button id="brkInButt" class="btn btn-warning p-3">Register Break In</button>
+                {% endif %}
+
+                {% if request.session.brkOutToday == "True" or request.session.clkedInToday != "True" %}
                 <button id="brkOutButt" class="btn btn-warning p-3" disabled>Register Break Out</button>
+                {% else %}
+                <button id="brkOutButt" class="btn btn-warning p-3">Register Break Out</button>
+                {% endif %}
             </div>
         </div>
     </div>
